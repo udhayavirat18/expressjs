@@ -23,10 +23,23 @@ const resolveUserId = (req, res, next) => {
 };
 
 router.get('/', (req, res) => {
+  console.log(req.session);
+  console.log(req.session.id);
+  req.session.visited = true;
+  res.cookie('Hello', 'world', { maxAge: 6000 * 60, sameSite: 'Lax', signed: true });
   res.status(201).send('Hello, World!');
 });
 
 router.get("/api/users", query("filter").optional().isString().notEmpty(), (req, res) => {
+  console.log(req.session);
+  console.log(req.session.id);
+  req.sessionStore.get(req.session.id,(err,sessionData) => {
+    if (err) {
+      console.log(err)
+      throw err;
+    }
+    console.log(sessionData);
+  })
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });

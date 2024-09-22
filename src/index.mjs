@@ -1,8 +1,17 @@
 import express from "express";
 import router from "./routes/index.mjs";
+import cookieParser from "cookie-parser";
+import session from "express-session";
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser('cookie'));
+app.use(session({
+    secret: 'secret',
+    saveUninitialized:false,
+    resave: false,
+    cookie: { maxAge: 86400000  }  // 24 Hours
+}));
 
 const PORT = process.env.PORT || 3000;
 export const mockusers = [
